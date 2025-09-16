@@ -1,3 +1,5 @@
+![zk-llm-verifier-eth](Front.png)
+
 # zk-llm-verifier-eth
 
 _Verifiable AI provenance anchored to Ethereum. Go + Solidity MVP with a clear path to zk proofs._
@@ -175,4 +177,3 @@ zk-llm-verifier-eth/
 MIT
 
 ---
-
