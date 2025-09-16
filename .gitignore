@@ -30,3 +30,12 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+a.md
+s.md
+.env
+
+go/bin
+.gocache
+.gomodcache
+.vscode/settings.json
