@@ -9,6 +9,7 @@ _Verifiable AI provenance anchored to Ethereum. Go + Solidity MVP with a clear p
 - [Why It Matters](#why-it-matters)
 - [Architecture](#architecture)
 - [Getting Started](#getting-started)
+- [Mock Pay-Per-Report Demo](#mock-pay-per-report-demo)
 - [CLI Commands](#cli-commands)
 - [Implementation Blueprint](#implementation-blueprint)
 - [Example Use Case](#example-use-case)
@@ -39,14 +40,14 @@ Components of the MVP:
 
 ```mermaid
 flowchart LR
-    A[AI Input] -->|keccak256| B[inputHash]
-    C[Model Tag] -->|keccak256| D[modelId]
-    E[AI Output] -->|keccak256| F[outputCommitment]
-    B --> G[Go CLI: dsverifier]
+    A["AI Input"] -->|keccak256| B["inputHash"]
+    C["Model Tag"] -->|keccak256| D["modelId"]
+    E["AI Output"] -->|keccak256| F["outputCommitment"]
+    B --> G["Go CLI: dsverifier"]
     D --> G
     F --> G
-    G -->|verifyAndRecord| H[InferenceSettlement]
-    H --> I[(Ethereum Log: InferenceRecorded)]
+    G -->|verifyAndRecord| H["InferenceSettlement"]
+    H --> I[("Ethereum Log: InferenceRecorded")]
 ```
 
 Upgrade path:
@@ -56,11 +57,11 @@ flowchart TD
     subgraph MVP
         A1[Hash input/output/tag] --> B1[On-chain attestation]
     end
-    subgraph ZKLog[zk-Log Consistency]
+    subgraph "zk-Log Consistency"
         C1[Signed pipeline run] --> C2[zk proof of matching hashes]
         C2 --> B2[On-chain verified attestation]
     end
-    subgraph ZKInf[zk-Inference]
+    subgraph "zk-Inference"
         D1[Open weights] --> D2[zk proof of y equals f of x W]
         D2 --> B3[On-chain zk inference attestation]
     end
@@ -110,6 +111,21 @@ make ds-attest \
 Result: transaction hash + `InferenceRecorded` event stored on-chain.
 
 Inspect the event via Anvil logs or `cast logs --rpc-url $RPC_URL $CONTRACT_ADDR`.
+
+## Mock Pay-Per-Report Demo
+
+Want to narrate the value prop without touching real crypto? Spin up the mock x402 paywall outlined in [`s3.md`](s3.md). The Go microservice at `go/cmd/mvdserver/main.go` returns an HTTP 402 with payment metadata until you resend the request with `X-PAYMENT: demo`, at which point it emits a provenance-rich JSON report (`payment_tx`, `attest_tx`, Keccak commitments). This is a fast way to demo the flow before wiring in the facilitator and attestation contracts.
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    Client->>Server: GET /insight/demo
+    Server-->>Client: 402 Payment Required + x402 metadata
+    Client->>Client: (mock) settle payment intent
+    Client->>Server: GET /insight/demo<br/>X-PAYMENT: demo
+    Server-->>Client: 200 OK + report JSON + X-PAYMENT-RESPONSE
+```
 
 ## CLI Commands
 

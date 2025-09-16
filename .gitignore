@@ -33,6 +33,9 @@ go.work.sum
 
 a.md
 s.md
+s2.md
+s3.md
+
 .env
 
 go/bin
