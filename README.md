@@ -122,8 +122,8 @@ sequenceDiagram
     participant Server
     Client->>Server: GET /insight/demo
     Server-->>Client: 402 Payment Required + x402 metadata
-    Client->>Client: (mock) settle payment intent
-    Client->>Server: GET /insight/demo<br/>X-PAYMENT: demo
+    Client->>Client: mock settle payment intent
+    Client->>Server: GET /insight/demo with X-PAYMENT header
     Server-->>Client: 200 OK + report JSON + X-PAYMENT-RESPONSE
 ```
 
